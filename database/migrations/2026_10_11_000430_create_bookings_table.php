@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->date('start_date')->index();
+            $table->date('expected_return_date')->index();
+            $table->date('actual_return_date')->nullable();
+            $table->string('status')->default('reserved');
+            $table->decimal('total_amount', 10, 2);
             $table->timestamps();
         });
     }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('booking_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('booking_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('item_id')->constrained();
+            $table->decimal('daily_price_at_booking', 10, 2);
+            $table->text('return_condition_note')->nullable();
             $table->timestamps();
         });
     }

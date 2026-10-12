@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('category');
+            $table->string('size');
+            $table->string('color');
+            $table->decimal('daily_price', 10, 2);
+            $table->string('condition');
+            $table->string('image_path')->nullable();
+            $table->string('status')->default('available')->index();
             $table->timestamps();
         });
     }

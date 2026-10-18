@@ -10,5 +10,6 @@
     <p>Browse our clothing collection.</p>
 
     <a href="{{ url('/catalog') }}">View Catalog</a>
+    <a href="{{ route('bookings.index') }}">View Bookings</a>
 </body>
 </html>

@@ -2,19 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Enums\{BookingStatus, PaymentStatus};
+use App\Enums\BookingStatus;
+use App\Enums\PaymentStatus;
+use Database\Factories\BookingFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
-    /** @use HasFactory<\Database\Factories\BookingFactory> */
+    /** @use HasFactory<BookingFactory> */
     use HasFactory;
 
-    protected $fillable = ['customer_id', 'user_id', 'start_date', 'expected_return_date',
-                       'actual_return_date', 'status', 'total_amount'];
+    protected $fillable = ['booking_reference', 'customer_id', 'user_id', 'start_date', 'expected_return_date',
+        'actual_return_date', 'status', 'total_amount'];
 
     protected function casts(): array
     {
@@ -27,10 +29,30 @@ class Booking extends Model
         ];
     }
 
-    public function customer()     { return $this->belongsTo(Customer::class); }
-    public function user()         { return $this->belongsTo(User::class); }
-    public function bookingItems() { return $this->hasMany(BookingItem::class); }
-    public function payments()     { return $this->hasMany(Payment::class); }
+    public function scopeBlocking(Builder $query): Builder
+    {
+        return $query->whereIn('status', [BookingStatus::Reserved, BookingStatus::Active]);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function bookingItems()
+    {
+        return $this->hasMany(BookingItem::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 
     // Overdue is calculated, never stored
     public function scopeOverdue(Builder $query): Builder
